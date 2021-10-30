@@ -2,6 +2,7 @@ const express = require('express');
 const Menu = require('./model/menu');
 const Food = require('./model/food');
 const User = require('./model/user')
+const Order = require('./model/orders')
 const bcrypt = require('bcrypt')
 const {check, validationResult } = require('express-validator')
 const bodyParser = require('body-parser');
@@ -52,7 +53,6 @@ app.get('*', function (req, res, next) {
   next();
 });
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'))
@@ -65,6 +65,24 @@ app.get('/', (req, res) => {
 app.get('/admin/login', (req, res)=>{
 
     res.render('admin/login')
+})
+
+app.get('/order/confirm', (req, res)=>{
+
+  res.render('confirm')
+})
+
+app.get('/order/bus', (req, res)=>{
+
+  Order.find().then(result=>{
+    res.render('bus', {
+      orders: result
+    }).catch(err => {
+      console.log(err);
+    });
+  });
+
+
 })
 
 // Login Process
@@ -127,7 +145,7 @@ app.post('/admin/register', [
 // logout
 app.get('/admin/logout', async (req, res) => {
   req.logout();
-  req.flash('success', 'You are logged out');
+  req.flash('success_msg', 'You are logged out');
   res.redirect('/admin/login');
 });
 
@@ -193,8 +211,10 @@ app.delete('/admin/delete_food/:id', (req, res) => {
 });
 
 app.get('/order', function (req, res) {
+  const hall = ['Liman', 'Kwanpong', 'Sey', 'Nelson']
   Menu.find().then(result=>{
   res.render('order', {
+    halls: hall, 
     data: result
   }).catch(err => {
     console.log(err);
@@ -227,4 +247,18 @@ app.post('/get-foods-by-prices', function (req, res) {
     console.log(err);
   })
 });
+
+app.post('/food/order', (req, res)=>{
+  console.log(req.body)
+  const food = new Order(req.body);
+  food.save()
+    .then(result => {
+      res.redirect('/food/order');
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+})
+
 
