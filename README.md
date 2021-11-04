@@ -5,7 +5,7 @@
 - clone repo
 
 ```
-git clone https://github.com/Rashidomar/CSCD322_Graphql_Server.git
+git clone https://github.com/Rashidomar/COS.git
 ```
 
 - change directory into root
