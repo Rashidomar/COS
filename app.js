@@ -61,6 +61,10 @@ app.get('/', (req, res) => {
     res.render('index')
 })
 
+app.get('/contact', (req, res) => {
+  res.render('contact')
+})
+
 app.get('/admin/login', (req, res)=>{
 
     res.render('admin/login')
@@ -70,7 +74,6 @@ app.get('/order/confirm', (req, res)=>{
 
   res.render('confirm')
 })
-
 
 app.get('/admin/orders', (req, res)=>{
       res.render('admin/orders') 
