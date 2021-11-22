@@ -10,7 +10,7 @@ let orderSchema = new mongoose.Schema({
     food: {
         type: String,
         required: true,
-        unique: true,
+    
     },
 
     price: {
@@ -21,7 +21,7 @@ let orderSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
+     
     },
 
     hall: {
@@ -32,7 +32,7 @@ let orderSchema = new mongoose.Schema({
     contact: {
         type: String,
         required: true,
-        unique: true,
+  
     },
 
     room_number: {

@@ -16,17 +16,16 @@ const port = 3000
 // Passport Config
 require('./middleware/passport')(passport);
 
+let mongo_remote = 'mongodb+srv://root:1234@mydatabase.g0ldg.mongodb.net/MyDatabase?retryWrites=true&w=majority'
+
 //Set up default mongoose connection
 var mongoDB = 'mongodb://127.0.0.1/my_database';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true}).then((result)=>{
+mongoose.connect(mongo_remote, {useNewUrlParser: true, useUnifiedTopology: true}).then((result)=>{
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
   })
 
-}).catch((err)=>{
-
-  console.log("Cant connect to database")
 })
 
 app.use(session({
@@ -72,18 +71,24 @@ app.get('/order/confirm', (req, res)=>{
   res.render('confirm')
 })
 
-app.get('/order/bus', (req, res)=>{
 
+app.get('/admin/orders', (req, res)=>{
+      res.render('admin/orders') 
+});
+
+app.get('/admin/get_orders', (req, res)=>{
   Order.find().then(result=>{
-    res.render('bus', {
-      orders: result
-    }).catch(err => {
+      res.json({
+        msg: 'success',
+        orders : result
+      }) 
+     })
+    .catch(err => {
       console.log(err);
-    });
-  });
+    })
+});
 
 
-})
 
 // Login Process
 app.post('/admin/login', async (req, res, next) => {
@@ -216,9 +221,7 @@ app.get('/order', function (req, res) {
   res.render('order', {
     halls: hall, 
     data: result
-  }).catch(err => {
-    console.log(err);
-  });
+  })
 });
 })
 
@@ -253,7 +256,7 @@ app.post('/food/order', (req, res)=>{
   const food = new Order(req.body);
   food.save()
     .then(result => {
-      res.redirect('/food/order');
+      res.redirect('/order');
     })
     .catch(err => {
       console.log(err);

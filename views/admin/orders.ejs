@@ -118,20 +118,9 @@
                                                     <th>Delete</th>
                                                 </tr>
                                             </tfoot>
-                                            <tbody>
-                                                <% orders.forEach(function(order){ %>
-                                                <tr>
-                                                    <td><%=order.food%></td>
-                                                    <td><%=order.menu%></td>
-                                                    <td><%=order.price%></td>
-                                                    <td><%=order.name%></td>
-                                                    <td><%=order.contact%></td>
-                                                    <td><%=order.hall%></td>
-                                                    <td><%=order.room_number%></td>                                                 
-                                                    <td><input type="submit" id="edit" class="btn btn-primary" value="Confirm Order"></td>
-                                                    <td><input type="submit"  class="btn btn-danger food_delete" data-id="<%=order._id%>" value="Declined Order"></td>
-                                                </tr> 
-                                                <%})%>    
+                                            <tbody id="getResult">
+
+ 
                                             </tbody>
                                         </table>
                                     </div>
@@ -164,47 +153,28 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             $(document).ready(function () {
-                // $( "#delete" ).click(function() {
-                    $('.food_delete').on('click' ,function (event) {
-                    event.preventDefault();
-                    const tr = $(this).closest('tr');
-                    const id = $(this).attr('data-id');
-                    // alert(id)
-                    $.ajax({
-                        url: '/admin/delete_food/' + id,
-                        method: 'DELETE',
-                        data: { id: id }
-                    }).done(function (res) {
-                        if (res.success) {
-                            console.log('id from ajax call is', res);
-                            tr.remove();
-                        } else {
-                            console.log('error...ajax');
-                        }
 
-                    })
-                })
+                	//load chat every 20000 millisecond
+                    setInterval(function () {update();},7000);
 
-
-                $('.menu_delete').on('click' ,function (event) {
-                    event.preventDefault();
-                    const tr = $(this).closest('tr');
-                    const id = $(this).attr('data-id');
-                    alert(id)
-                    $.ajax({
-                        url: '/admin/delete_menu/' + id,
-                        method: 'DELETE',
-                        data: { id: id }
-                    }).done(function (res) {
-                        if (res.success) {
-                            console.log('id from ajax call is', res);
-                            tr.remove();
-                        } else {
-                            console.log('error...ajax');
-                        }
-
-                    })
-                })
+                    //load chat from database 
+                    function update() {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/admin/get_orders',
+                            success:function (result) {
+                                let som = JSON.stringify(result.orders)
+                                    // alert(som)
+                                $.each(result.orders, function(i, order){
+                                    // alert(order)
+                                    $('#getResult').html(    
+                                        '<tr><td>'+ order.food + '</td><td>' +  order.menu + '</td><td>' + order.price + '</td><td>' + order.name + '</td><td>' + order.contact + '</td><td>' + order.hall + '</td><td>' + order.room_number + '</td><td><input type="submit" id="edit" class="btn btn-primary" value="Confirm Order"></td><td><input type="submit"  class="btn btn-danger food_delete" data-id="" value="Declined Order"></td></tr>'
+                                        )
+                                      });
+  
+                                    }
+                            });
+                    }
 
             })
 
