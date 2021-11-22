@@ -22,7 +22,7 @@ let mongo_remote = 'mongodb+srv://root:1234@mydatabase.g0ldg.mongodb.net/MyDatab
 var mongoDB = 'mongodb://127.0.0.1/my_database';
 mongoose.connect(mongo_remote, {useNewUrlParser: true, useUnifiedTopology: true}).then((result)=>{
 
-  app.listen(port, () => {
+  app.listen(process.env.PORT || port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
   })
 
