@@ -1,4 +1,5 @@
 const express = require('express');
+const Message = require('./model/message')
 const Menu = require('./model/menu');
 const Food = require('./model/food');
 const User = require('./model/user')
@@ -91,6 +92,21 @@ app.get('/admin/get_orders', (req, res)=>{
     })
 });
 
+
+app.post('/contact', (req, res)=>{
+
+  const message = new Message(req.body);
+  message.save()
+    .then(result => {
+      res.json({
+        msg:'success'
+      })
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+})
 
 
 // Login Process
